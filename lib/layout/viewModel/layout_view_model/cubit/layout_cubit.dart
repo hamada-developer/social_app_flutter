@@ -8,8 +8,10 @@ import 'package:social_app/modules/bottom_nav/users/views/screens/home_screen.da
 import 'layout_state.dart';
 
 class LayoutCubit extends Cubit<LayoutState> {
-  int currentIndex = 3;
 
+  int _currentIndex = 0;
+
+  /*Screens of bottom navigation*/
   List<Widget> screen = [
     const HomeScreen(),
     const ChatsScreen(),
@@ -17,6 +19,8 @@ class LayoutCubit extends Cubit<LayoutState> {
     const UsersScreen(),
     const SettingsScreen(),
   ];
+
+  /*titles of Screens bottom navigation*/
   List<String> titles = [
     AppStrings.homeTitle,
     AppStrings.chatsTitle,
@@ -33,8 +37,10 @@ class LayoutCubit extends Cubit<LayoutState> {
     if (index == 2) {
       emit(AddPostState());
     } else {
-      currentIndex = index;
+      _currentIndex = index;
       emit(ChangeBottomNavState());
     }
   }
+  /*Encapsulation*/
+int get currentIndex => _currentIndex;
 }

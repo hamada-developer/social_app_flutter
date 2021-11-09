@@ -9,11 +9,7 @@ class ToggleObscure extends RegisterStates {}
 
 class LoadingRegisterState extends RegisterStates {}
 
-class SuccessRegisterState extends RegisterStates {
-  final UserModel userModel;
-
-  SuccessRegisterState(this.userModel);
-}
+class SuccessRegisterState extends RegisterStates {}
 
 class ErrorRegisterState extends RegisterStates {
   final String error;

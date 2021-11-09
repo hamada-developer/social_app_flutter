@@ -17,12 +17,12 @@ class AppLayout extends StatelessWidget {
       create: (context) => LayoutCubit(),
       child: BlocConsumer<LayoutCubit, LayoutState>(
         listener: (context, state) {
-          if(state is AddPostState){
-            navigateTo(
-              context: context,
-              route: AppStrings.addPostScreen,
-            );
-          }
+            if(state is AddPostState){
+              navigateTo(
+                context: context,
+                route: AppStrings.addPostScreen,
+              );
+            }
         },
         builder: (context, state) {
           LayoutFun layoutFun = LayoutFun();

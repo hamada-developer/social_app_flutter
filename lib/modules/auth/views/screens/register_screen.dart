@@ -3,19 +3,19 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app/constants/app_strings.dart';
 import 'package:social_app/modules/auth/viewModels/register_screen_view_model/cubit/register_cubit.dart';
 import 'package:social_app/modules/auth/viewModels/register_screen_view_model/cubit/register_states.dart';
-import 'package:social_app/modules/auth/viewModels/register_screen_view_model/function/register_fun.dart';
-import 'package:social_app/modules/auth/views/widgets/default_button.dart';
-import 'package:social_app/modules/auth/views/widgets/default_text_fromfield.dart';
-import 'package:social_app/utils/navigations.dart';
-import 'package:social_app/modules/auth/views/widgets/vertical_separated.dart';
+import 'package:social_app/modules/auth/viewModels/register_screen_view_model/events/register_event.dart';
+import 'package:social_app/modules/auth/views/widgets/password_register.dart';
+import 'package:social_app/utils/widgets/default_text_fromfield.dart';
+import 'package:social_app/modules/auth/views/widgets/register_button.dart';
+import 'package:social_app/utils/widgets/vertical_separated.dart';
 
 class RegisterScreen extends StatelessWidget {
   const RegisterScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final RegisterCubit registerCubit = RegisterCubit.get(context);
-    final RegisterFunction registerFunction = RegisterFunction();
+    final RegisterCubit cubit = RegisterCubit.get(context);
+    final RegisterEvents events = RegisterEvents();
     return Scaffold(
       appBar: AppBar(
         leading: const BackButton(
@@ -27,7 +27,7 @@ class RegisterScreen extends StatelessWidget {
         child: Center(
           child: SingleChildScrollView(
             child: Form(
-              key: registerCubit.formKey,
+              key: cubit.formKey,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -53,85 +53,45 @@ class RegisterScreen extends StatelessWidget {
 
                   /// User Name
                   DefaultTextFormField(
-                    controller: registerCubit.userNameController,
+                    controller: cubit.userNameController,
                     labelText: AppStrings.labelUserName,
                     prefixIcon: const Icon(
                       Icons.person,
                     ),
-                    validator: registerFunction.chickUserName,
+                    validator: events.chickUserName,
                     keyboardType: TextInputType.name,
                   ),
                   const VerticalSeparated(),
                   // Email Address
                   DefaultTextFormField(
-                    controller: registerCubit.emailController,
+                    controller: cubit.emailController,
                     labelText: AppStrings.labelEmail,
                     prefixIcon: const Icon(
                       Icons.email,
                     ),
-                    validator: registerFunction.chickEmail,
+                    validator: events.chickEmail,
                     keyboardType: TextInputType.emailAddress,
                   ),
                   const VerticalSeparated(),
 
                   /// Password
-                  BlocBuilder<RegisterCubit, RegisterStates>(
-                    builder: (context, state) {
-                      return DefaultTextFormField(
-                        controller: registerCubit.passwordController,
-                        labelText: AppStrings.labelPassword,
-                        prefixIcon: const Icon(
-                          Icons.lock,
-                        ),
-                        obscureText: registerCubit.getIsHide,
-                        suffixIcon: IconButton(
-                          onPressed: registerCubit.toggleObscure,
-                          icon: const Icon(
-                            Icons.remove_red_eye_rounded,
-                          ),
-                        ),
-                        validator: registerFunction.chickPassword,
-                        keyboardType: TextInputType.visiblePassword,
-                      );
-                    },
-                  ),
+                  const PasswordRegister(),
                   const VerticalSeparated(),
 
                   /// Phone
                   DefaultTextFormField(
-                    controller: registerCubit.phoneController,
+                    controller: cubit.phoneController,
                     labelText: AppStrings.labelPhone,
                     prefixIcon: const Icon(
                       Icons.phone,
                     ),
-                    validator: registerFunction.chickPhone,
+                    validator: events.chickPhone,
                     keyboardType: TextInputType.phone,
                   ),
                   const VerticalSeparated(),
 
                   /// Register Button
-                  BlocConsumer<RegisterCubit, RegisterStates>(
-                    listener: (context, state) {
-                      if (state is SuccessRegisterState) {
-                        // TODO go to the Home Screen
-                        navigateToAndFinish(context: context, newRouteName: AppStrings.appLayoutScreen);
-                      }
-                      else if (state is ErrorRegisterState) {
-                        //TODO show toast to user
-                        registerFunction.showToast(state.error.toString());
-                      }
-                    },
-                    builder: (context, state) {
-                      return state is! LoadingRegisterState ?
-                      DefaultButton(
-                        text: AppStrings.registerButton,
-                        onPressed: () {
-                          registerCubit.loginButton();
-                        },
-                      ):
-                      const Center(child: CircularProgressIndicator());
-                    },
-                  ),
+                  const RegisterButton(),
                 ],
               ),
             ),
@@ -142,9 +102,3 @@ class RegisterScreen extends StatelessWidget {
   }
 }
 
-/**
- * * Important information
- * ! Deprecated method, do not use
- * ? should this method be exposed
- * TODO: refactor this method
- */

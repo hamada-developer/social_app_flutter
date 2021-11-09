@@ -1,5 +1,4 @@
 import 'package:social_app/modules/auth/models/services/sharedPreferences/cach_helper.dart';
-import 'package:social_app/modules/auth/viewModels/login_screen_view_model/cubit/login_cubit.dart';
 
 class AppStrings {
 
@@ -45,4 +44,5 @@ class AppStrings {
   static const String notificationScreen = 'notification';
   static const String searchScreen = 'search';
   static const String addPostScreen = 'AddPost';
+  static const String editScreen = 'EditScreen';
 }

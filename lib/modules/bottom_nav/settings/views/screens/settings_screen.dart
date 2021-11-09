@@ -1,6 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:social_app/constants/app_strings.dart';
+import 'package:social_app/modules/bottom_nav/settings/views/widgets/build_circle_image.dart';
+import 'package:social_app/modules/bottom_nav/settings/views/widgets/build_cover_image.dart';
+import 'package:social_app/modules/bottom_nav/settings/views/widgets/build_name_bio.dart';
+import 'package:social_app/modules/bottom_nav/settings/views/widgets/build_statistics.dart';
 import 'package:social_app/style/icon_broken.dart';
+import 'package:social_app/utils/navigations.dart';
+import 'package:social_app/utils/widgets/navigate_with_data.dart';
+
+import 'edit_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -17,83 +26,52 @@ class SettingsScreen extends StatelessWidget {
             width: double.infinity,
             child: Stack(
               children: [
-                _buildCover(),
+                const BuildCoverImage(),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const SizedBox(
+                  children: const [
+                    SizedBox(
                       height: 40,
                     ),
-                    _buildCircleImage(),
-                    _buildUserNameAndBio(context),
+                    BuildCircleImage(),
+                    BuildNameBio(),
                   ],
                 ),
               ],
             ),
           ),
-          /// display counters
+          /// display statistics
           Row(
-            children: [
+            children: const [
+              /// posts
               Expanded(
-                child: Column(
-                  children: [
-                    Text(
-                      '100',
-                      style: Theme.of(context).textTheme.headline6,
-                    ),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    const Text('Posts'),
-                  ],
+                child: BuildStatistics(
+                  title: 'Posts',
+                  counter: 100,
                 ),
               ),
+
+              /// photos
               Expanded(
-                child: Column(
-                  children: [
-                    Text(
-                      '100',
-                      style: Theme.of(context).textTheme.headline6!.copyWith(
-                            fontSize: 16,
-                          ),
-                    ),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    const Text('Posts'),
-                  ],
+                child: BuildStatistics(
+                  title: 'Posts',
+                  counter: 336,
                 ),
               ),
+
+              /// followers
               Expanded(
-                child: Column(
-                  children: [
-                    Text(
-                      '100',
-                      style: Theme.of(context).textTheme.headline6!.copyWith(
-                            fontSize: 16,
-                          ),
-                    ),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    const Text('Posts'),
-                  ],
+                child: BuildStatistics(
+                  title: 'Followers',
+                  counter: 250,
                 ),
               ),
+
+              /// Followings
               Expanded(
-                child: Column(
-                  children: [
-                    Text(
-                      '100',
-                      style: Theme.of(context).textTheme.headline6!.copyWith(
-                            fontSize: 16,
-                          ),
-                    ),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    const Text('Posts'),
-                  ],
+                child: BuildStatistics(
+                  title: 'Followings',
+                  counter: 64,
                 ),
               ),
             ],
@@ -114,75 +92,18 @@ class SettingsScreen extends StatelessWidget {
                 width: 8,
               ),
               OutlinedButton(
-                onPressed: () {},
+                onPressed: () {
+                  navigateWithData(
+                    context: context,
+                    widget: const EditScreen(),
+                  );
+                },
                 child: const Icon(IconBroken.Edit),
               ),
             ],
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildCover(){
-    return Container(
-      width: double.infinity,
-      height: 280 / 2,
-      clipBehavior: Clip.antiAlias,
-      decoration: const BoxDecoration(
-          borderRadius: BorderRadiusDirectional.only(
-            topStart: Radius.circular(15),
-            topEnd: Radius.circular(15),
-          ),
-          image: DecorationImage(
-            fit: BoxFit.cover,
-            image: NetworkImage(
-              'https://images.freeimages.com/images/large-previews/1e7/japanese-food-1327425.jpg',
-            ),
-          )),
-    );
-  }
-
-  Widget _buildCircleImage(){
-    return Center(
-      child: Container(
-        child: const CircleAvatar(
-          radius: 55,
-          backgroundImage: NetworkImage(
-            'https://images.unsplash.com/photo-1507591064344-4c6ce005b128?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80',
-          ),
-        ),
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          border: Border.all(color: Colors.white, width: 5),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildUserNameAndBio(BuildContext context){
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        const SizedBox(
-          height: 10,
-          width: double.infinity,
-        ),
-        Text(
-          'Hamada Mohamed',
-          style: Theme.of(context).textTheme.headline6,
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        Text(
-          'write you bio',
-          style: Theme.of(context).textTheme.caption!.copyWith(
-            fontSize: 16,
-          ),
-        ),
-      ],
     );
   }
 }

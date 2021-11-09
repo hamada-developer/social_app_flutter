@@ -1,5 +1,3 @@
-import 'package:social_app/modules/auth/models/models/users_model.dart';
-
 abstract class LoginStates {}
 
 class InitialLoginState extends LoginStates {}

@@ -3,19 +3,22 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app/constants/app_strings.dart';
 import 'package:social_app/modules/auth/viewModels/login_screen_view_model/cubit/login_cubit.dart';
 import 'package:social_app/modules/auth/viewModels/login_screen_view_model/cubit/login_states.dart';
-import 'package:social_app/modules/auth/viewModels/login_screen_view_model/function/login_fun.dart';
-import 'package:social_app/modules/auth/views/widgets/default_button.dart';
-import 'package:social_app/modules/auth/views/widgets/default_text_fromfield.dart';
+import 'package:social_app/modules/auth/viewModels/login_screen_view_model/events/login_events.dart';
+import 'package:social_app/modules/auth/views/widgets/login_button.dart';
+import 'package:social_app/utils/widgets/default_button.dart';
+import 'package:social_app/utils/widgets/default_circle_laoding.dart';
+import 'package:social_app/utils/widgets/default_text_fromfield.dart';
+import 'package:social_app/modules/auth/views/widgets/password__login_widget.dart';
 import 'package:social_app/utils/navigations.dart';
-import 'package:social_app/modules/auth/views/widgets/vertical_separated.dart';
+import 'package:social_app/utils/widgets/vertical_separated.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final loginCubit = LoginCubit.get(context);
-    final LoginFunction loginFunction = LoginFunction();
+    final LoginCubit cubit = LoginCubit.get(context);
+    final LoginEvents events = LoginEvents();
     return Scaffold(
       appBar: AppBar(
         title: const Text(AppStrings.loginTitle),
@@ -25,7 +28,7 @@ class LoginScreen extends StatelessWidget {
         child: Center(
           child: SingleChildScrollView(
             child: Form(
-              key: loginCubit.formKey,
+              key: cubit.formKey,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -51,60 +54,25 @@ class LoginScreen extends StatelessWidget {
                     ),
                   ),
                   const VerticalSeparated(),
+
                   /// Email Address
                   DefaultTextFormField(
-                    controller: loginCubit.emailController,
+                    controller: cubit.emailController,
                     labelText: AppStrings.labelEmail,
                     prefixIcon: const Icon(
                       Icons.email,
                     ),
-                    validator: loginFunction.chickEmail,
+                    validator: events.checkEmail,
                     keyboardType: TextInputType.emailAddress,
                   ),
                   const VerticalSeparated(),
+
                   /// Password
-                  BlocBuilder<LoginCubit, LoginStates>(
-                    builder: (context, state) {
-                      return DefaultTextFormField(
-                        controller: loginCubit.passwordController,
-                        labelText: AppStrings.labelPassword,
-                        keyboardType: TextInputType.visiblePassword,
-                        prefixIcon: const Icon(
-                          Icons.lock,
-                        ),
-                        obscureText: LoginCubit.get(context).getIsHide,
-                        suffixIcon: IconButton(
-                          onPressed: LoginCubit.get(context).toggleObscure,
-                          icon: const Icon(
-                            Icons.remove_red_eye_rounded,
-                          ),
-                        ),
-                        validator: loginFunction.chickPassword,
-                      );
-                    },
-                  ),
+                  const PasswordLoginWidget(),
                   const VerticalSeparated(),
+
                   /// Login Button
-                  BlocConsumer<LoginCubit, LoginStates>(
-                    listener: (context, state) {
-                      if (state is SuccessLoginState) {
-                        // TODO go to the Home Screen
-                        navigateToAndFinish(context: context, newRouteName: AppStrings.appLayoutScreen);
-                      }
-                      else if (state is ErrorLoginState) {
-                        ///
-                        loginFunction.showToast(state.error.toString(),);
-                      }
-                    },
-                    builder: (context, state) {
-                      return state is! LoadingLoginState ?
-                      DefaultButton(
-                        text: AppStrings.loginButton,
-                        onPressed: loginCubit.loginButton,
-                      ):
-                      const Center(child: CircularProgressIndicator(),);
-                    },
-                  ),
+                  const LoginButton(),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -112,10 +80,15 @@ class LoginScreen extends StatelessWidget {
                         AppStrings.loginText_1,
                       ),
                       TextButton(
-                        onPressed: (){
-                          navigateTo(context: context, route: AppStrings.registerScreen,);
+                        onPressed: () {
+                          navigateTo(
+                            context: context,
+                            route: AppStrings.registerScreen,
+                          );
                         },
-                        child: Text(AppStrings.loginText_2.toUpperCase()),
+                        child: Text(
+                          AppStrings.loginText_2.toUpperCase(),
+                        ),
                       )
                     ],
                   ),

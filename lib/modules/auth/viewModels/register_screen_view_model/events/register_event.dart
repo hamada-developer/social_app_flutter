@@ -1,12 +1,28 @@
-import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:social_app/constants/app_strings.dart';
-import 'package:social_app/modules/auth/viewModels/login_screen_view_model/cubit/login_cubit.dart';
 
-class LoginFunction {
+class RegisterEvents {
+
+  /*Checker for text form field*/
+  String? chickUserName(value) {
+    if (value!.isEmpty) {
+      return AppStrings.msgUserNameError;
+    } else {
+      null;
+    }
+  }
+
   String? chickEmail(value) {
     if (value!.isEmpty) {
       return AppStrings.msgEmailError;
+    } else {
+      null;
+    }
+  }
+
+  String? chickPhone(value) {
+    if (value!.isEmpty) {
+      return AppStrings.msgPhoneError;
     } else {
       null;
     }
@@ -20,12 +36,14 @@ class LoginFunction {
     }
   }
 
-  void showToast(String msg) {
+  /*Toasts*/
+  void showToast(String msg){
     Fluttertoast.showToast(
         msg: msg,
         toastLength: Toast.LENGTH_LONG,
         gravity: ToastGravity.CENTER,
         timeInSecForIosWeb: 1,
-        fontSize: 16.0);
+        fontSize: 16.0
+    );
   }
 }

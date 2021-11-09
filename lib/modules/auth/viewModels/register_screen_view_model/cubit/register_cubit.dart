@@ -2,17 +2,19 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart'
     show BuildContext, FormState, GlobalKey, TextEditingController;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app/constants/app_strings.dart';
+import 'package:social_app/constants/collections.dart';
 import 'package:social_app/modules/auth/models/models/users_model.dart';
 import 'package:social_app/modules/auth/models/services/sharedPreferences/cach_helper.dart';
 
 import 'register_states.dart';
 
 class RegisterCubit extends Cubit<RegisterStates> {
+
+  /*Variables*/
   bool _isHide = true;
   final formKey = GlobalKey<FormState>();
   final TextEditingController emailController = TextEditingController();
@@ -21,41 +23,79 @@ class RegisterCubit extends Cubit<RegisterStates> {
   final TextEditingController phoneController = TextEditingController();
   late FirebaseAuth _firebaseAuth;
   late FirebaseFirestore _firebaseFirestore;
-
   late UserModel _userModel;
 
-  /// constructor
+  /*Constructor*/
   RegisterCubit() : super(InitialLoginState());
 
-  /// create a instance of this RegisterCubit
+  /*Instance*/
   static RegisterCubit get(BuildContext context) => BlocProvider.of(context);
 
-  /// first state
-  /// change state to [ToggleObscure]
+  /*Initialization*/
+  void initializeFirebaseAuth(){
+    _firebaseAuth = FirebaseAuth.instance;
+  }
+  void initializeFirebaseFireStore(){
+    _firebaseFirestore = FirebaseFirestore.instance;
+  }
+
+  /*Emit states*/
   void toggleObscure() {
     _isHide = !_isHide;
     emit(ToggleObscure());
   }
 
-  /// change state
-  void loginButton() {
-    if (formKey.currentState!.validate()) {
-      emit(LoadingRegisterState());
-      registerFirebase();
-    } else {
-      print('error');
+  createUser({
+    required String uId,
+    required String email,
+    required String phoneNumber,
+    required String userName,
+  }) {
+    try {
+      /// 1- initialize fireStore
+      initializeFirebaseFireStore();
+
+      /// 2- create instance of UserModel
+      _userModel = UserModel(name: userName, emailAddress: email, phoneNumber: phoneNumber, uId: uId);
+
+      /// 3- create {Users -> uId -> [data]}
+      _firebaseFirestore.collection(users).doc(uId).set(_userModel.toMap());
+
+      /// 4- save uId in shredPreferences
+      saveUserIdToSharedPref(_userModel.uId.toString());
+
+      /// 5-set state Success
+      emit(SuccessRegisterState());
+    } on Exception catch (error) {
+      print('Error when crateUser fireStore ${error.toString()}');
     }
   }
 
-  /// register method
+  /*Functions*/
+  void loginButton() {
+    if (formKey.currentState!.validate()) {
+      /// 1- set state Loading
+      emit(LoadingRegisterState());
+      /// 2- call function registerFirebase
+      registerFirebase();
+    } else {
+      /// field is empty
+      print('Not Valid');
+    }
+  }
   void registerFirebase() async {
     try {
-      _firebaseAuth = FirebaseAuth.instance;
+      /// 1-initialize authentication
+      initializeFirebaseAuth();
+
+      /// 2-authentication firebase
       UserCredential userCredential =
           await _firebaseAuth.createUserWithEmailAndPassword(
         email: emailController.text,
         password: passwordController.text,
       );
+
+      /// 3-create user in fireStore
       createUser(
         uId: userCredential.user!.uid,
         email: emailController.text,
@@ -67,29 +107,11 @@ class RegisterCubit extends Cubit<RegisterStates> {
       emit(ErrorRegisterState(error.toString()));
     }
   }
-
-  createUser({
-    required String uId,
-    required String email,
-    required String phoneNumber,
-    required String userName,
-  }) {
-    try {
-      _userModel = UserModel(userName: userName, emailAddress: email, phoneNumber: phoneNumber, uId: uId);
-      _firebaseFirestore = FirebaseFirestore.instance;
-      _firebaseFirestore.collection('Users').doc(uId).set(_userModel.toJSON());
-
-      saveUserIdToSharedPref(_userModel.uId.toString());
-      emit(SuccessRegisterState(_userModel));
-    } on Exception catch (error) {
-      print(error.toString());
-    }
-  }
-
   void saveUserIdToSharedPref(String uId) {
     AppStrings.uId = uId;
     CacheHelper.saveString(key: AppStrings.uIdKey , value: AppStrings.uId.toString());
   }
 
+  /*Encapsulations*/
   bool get getIsHide => _isHide;
 }
