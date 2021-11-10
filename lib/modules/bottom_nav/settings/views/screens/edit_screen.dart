@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:social_app/modules/bottom_nav/settings/views/widgets/build_circle_image.dart';
 import 'package:social_app/modules/bottom_nav/settings/views/widgets/build_cover_image.dart';
 import 'package:social_app/modules/bottom_nav/settings/views/widgets/build_name_bio.dart';
+import 'package:social_app/style/icon_broken.dart';
 import 'package:social_app/utils/widgets/default_text_fromfield.dart';
+import 'package:social_app/utils/widgets/vertical_separated.dart';
 
 class EditScreen extends StatelessWidget {
   const EditScreen({Key? key}) : super(key: key);
@@ -10,7 +12,14 @@ class EditScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        actions: [
+          TextButton(
+            onPressed: () {},
+            child: Text('update'.toUpperCase()),
+          ),
+        ],
+      ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
@@ -21,15 +30,61 @@ class EditScreen extends StatelessWidget {
               width: double.infinity,
               child: Stack(
                 children: [
-                  const BuildCoverImage(),
+                  Stack(
+                    alignment: AlignmentDirectional.topEnd,
+                    children: [
+                      const BuildCoverImage(),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: CircleAvatar(
+                          child: IconButton(
+                            onPressed: () {},
+                            icon: Icon(
+                              IconBroken.Camera,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      SizedBox(
+                    children: [
+                      const SizedBox(
                         height: 40,
                       ),
-                      BuildCircleImage(),
-                      BuildNameBio(),
+                      Center(
+                        child: Container(
+                          child: Stack(
+                            alignment: AlignmentDirectional.bottomEnd,
+                            children: [
+                              const CircleAvatar(
+                                radius: 55,
+                                backgroundColor: Colors.white,
+                                backgroundImage: NetworkImage(
+                                  'https://cdn-icons-png.flaticon.com/512/709/709722.png',
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: CircleAvatar(
+                                  child: IconButton(
+                                    onPressed: () {},
+                                    icon: Icon(
+                                      IconBroken.Camera,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.white, width: 5),
+                          ),
+                        ),
+                      ),
+                      const BuildNameBio(),
                     ],
                   ),
                 ],
@@ -37,6 +92,12 @@ class EditScreen extends StatelessWidget {
             ),
             const DefaultTextFormField(
               labelText: 'Edit name',
+              prefixIcon: Icon(IconBroken.User),
+            ),
+            const VerticalSeparated(),
+            const DefaultTextFormField(
+              labelText: 'Bio',
+              prefixIcon: Icon(IconBroken.Add_User),
             ),
           ],
         ),
