@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:social_app/modules/bottom_nav/settings/views/widgets/build_circle_image.dart';
 import 'package:social_app/modules/bottom_nav/settings/views/widgets/build_cover_image.dart';
 import 'package:social_app/modules/bottom_nav/settings/views/widgets/build_name_bio.dart';
 import 'package:social_app/style/icon_broken.dart';
@@ -14,9 +13,12 @@ class EditScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         actions: [
-          TextButton(
-            onPressed: () {},
-            child: Text('update'.toUpperCase()),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextButton(
+              onPressed: () {},
+              child: Text('update'.toUpperCase()),
+            ),
           ),
         ],
       ),
@@ -39,7 +41,7 @@ class EditScreen extends StatelessWidget {
                         child: CircleAvatar(
                           child: IconButton(
                             onPressed: () {},
-                            icon: Icon(
+                            icon: const Icon(
                               IconBroken.Camera,
                             ),
                           ),
