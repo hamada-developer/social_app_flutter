@@ -17,7 +17,7 @@ class EditScreen extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: TextButton(
               onPressed: () {},
-              child: Text('update'.toUpperCase()),
+              child: Text('hi hamada'.toUpperCase()),
             ),
           ),
         ],
