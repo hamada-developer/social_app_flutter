@@ -1,59 +1,52 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:social_app/modules/bottom_nav/settings/models/models/settings_models.dart';
 import 'package:social_app/modules/bottom_nav/settings/models/services/firestore/firestore_service.dart';
+import 'package:social_app/modules/bottom_nav/settings/viewModels/cubit/edit_cubit.dart';
+import 'package:social_app/modules/bottom_nav/settings/viewModels/cubit/edit_state.dart';
 import 'package:social_app/modules/bottom_nav/settings/viewModels/settings_screen_view_model.dart';
+import 'package:social_app/utils/widgets/toast.dart';
 
 class BuildCoverImage extends StatelessWidget {
+
   const BuildCoverImage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    /* dependency injection*/
     SettingsScreenViewModel screenViewModel =
-        SettingsScreenViewModel(FirestoreService());
-    screenViewModel.getUrlImageCover();
-    return FutureBuilder<SettingsModels>(
-      future: screenViewModel.getUrlImageCover(),
-      builder: (BuildContext context, snap) {
-        if (snap.connectionState == ConnectionState.done) {
-          print('connection state done = ');
-          return Container(
-            width: double.infinity,
-            height: 280 / 2,
-            clipBehavior: Clip.antiAlias,
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadiusDirectional.only(
-                topStart: Radius.circular(15),
-                topEnd: Radius.circular(15),
-              ),
-              image: DecorationImage(
-                fit: BoxFit.cover,
-                image: NetworkImage(
-                  snap.data!.urlImageCover,
-                ),
-              ),
-            ),
-          );
-        } else {
-          return Container(
-            width: double.infinity,
-            height: 280 / 2,
-            clipBehavior: Clip.antiAlias,
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadiusDirectional.only(
-                topStart: Radius.circular(15),
-                topEnd: Radius.circular(15),
-              ),
-              image: DecorationImage(
-                fit: BoxFit.cover,
-                image: NetworkImage(
-                  'https://images.ctfassets.net/hrltx12pl8hq/4plHDVeTkWuFMihxQnzBSb/aea2f06d675c3d710d095306e377382f/shutterstock_554314555_copy.jpg',
-                ),
-              ),
-            ),
-          );
-        }
-      },
+    SettingsScreenViewModel(FirestoreService());
+    return Container(
+      width: double.infinity,
+      height: 280 / 2,
+      clipBehavior: Clip.antiAlias,
+      decoration: const BoxDecoration(
+        borderRadius: BorderRadiusDirectional.only(
+          topStart: Radius.circular(15),
+          topEnd: Radius.circular(15),
+        ),
+      ),
+      child: FutureBuilder<SettingsModels>(
+        future: screenViewModel.getSettingData(),
+        builder: (context, data) {
+          if (data.connectionState == ConnectionState.waiting) {
+            return Container(
+              color: Colors.white,
+            );
+          } else {
+            return BlocBuilder<EditCubit, EditState>(
+              builder: (context, state) {
+                EditCubit cubit = EditCubit.get(context);
+                return cubit.fileImageCo.path.contains('')?
+                    Container(child: Text('true'),):Container(child: Text('false'),);
+              },
+            );
+          }
+        },
+      ),
     );
   }
+
 }

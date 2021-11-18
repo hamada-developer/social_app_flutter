@@ -5,6 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart'
 import 'package:social_app/constants/app_strings.dart';
 import 'package:social_app/modules/appBar/notifications/views/screens/notification_screen.dart';
 import 'package:social_app/utils/navigations.dart';
+import 'package:social_app/utils/widgets/toast.dart';
 
 class LayoutFun {
   void sendEmailVerification() {
@@ -14,14 +15,6 @@ class LayoutFun {
     } on Exception catch (error) {
       print('Error when send email verification ${error.toString()}');
     }
-  }
-  void showToast(String msg) {
-    Fluttertoast.showToast(
-        msg: msg,
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.CENTER,
-        timeInSecForIosWeb: 1,
-        fontSize: 16.0);
   }
 
   void notificationButton(BuildContext context){

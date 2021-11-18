@@ -14,9 +14,9 @@ class UserModel {
     required this.emailAddress,
     required this.phoneNumber,
     required this.uId,
-    this.bio = 'your bio',
-    this.urlImageCover = 'https://cdn-icons-png.flaticon.com/512/21/21104.png',
-    this.urlImageProfile = 'https://cdn-icons-png.flaticon.com/512/21/21104.png',
+    this.bio = 'write your bio',
+    this.urlImageCover = 'https://image.freepik.com/free-photo/gray-abstract-wireframe-technology-background_53876-101941.jpg',
+    this.urlImageProfile = 'https://cdn-icons-png.flaticon.com/512/709/709722.png',
   });
 
   /*named constructor*/

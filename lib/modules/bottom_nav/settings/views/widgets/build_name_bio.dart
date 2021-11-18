@@ -20,7 +20,7 @@ class BuildNameBio extends StatelessWidget {
           width: double.infinity,
         ),
         FutureBuilder<SettingsModels>(
-          future: viewModel.getUrlImageCover(),
+          future: viewModel.getSettingData(),
           builder: (_, snapshot){
             if(snapshot.connectionState == ConnectionState.done)
               {
@@ -41,7 +41,7 @@ class BuildNameBio extends StatelessWidget {
           height: 10,
         ),
         FutureBuilder<SettingsModels>(
-          future: viewModel.getUrlImageCover(),
+          future: viewModel.getSettingData(),
           builder: (_, snapshot){
             if(snapshot.connectionState == ConnectionState.done)
             {

@@ -3,18 +3,19 @@ import 'package:social_app/modules/bottom_nav/settings/models/repositories/user_
 
 class SettingsScreenViewModel {
   // var of super class
-  final UserRepo userRepo;
+  final UserRepo _userRepo;
+
   // model
-  late SettingsModels models;
+  late SettingsModels _models;
 
-  SettingsScreenViewModel(this.userRepo);
+  SettingsScreenViewModel(this._userRepo);
 
-  Future<SettingsModels> getUrlImageCover() async {
+  Future<SettingsModels> getSettingData() async {
     try {
-      models = await userRepo.userInfo();
+      _models = await _userRepo.userInfo();
     } on Exception catch (error) {
       print('Error when getUrlImageCover ${error.toString()}');
     }
-    return models;
+    return _models;
   }
 }

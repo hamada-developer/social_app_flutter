@@ -5,9 +5,14 @@ class ChatsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text(
-        'ChatsScreen',
+    return  Center(
+      child: TextButton(
+        child: const Text('char screen'),
+        onPressed: (){
+          String? name ;
+          String student = name?? 'unknown';
+          print(student);
+        },
       ),
     );
   }
