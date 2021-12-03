@@ -1,3 +1,5 @@
+
+
 import 'package:flutter/material.dart';
 
 class BuildStatistics extends StatelessWidget {
@@ -21,7 +23,7 @@ class BuildStatistics extends StatelessWidget {
         const SizedBox(
           height: 5,
         ),
-        Text(title),
+        Text(title,),
       ],
     );
   }

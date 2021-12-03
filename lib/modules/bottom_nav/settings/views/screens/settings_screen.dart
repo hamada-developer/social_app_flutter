@@ -1,48 +1,47 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:social_app/constants/app_strings.dart';
-import 'package:social_app/modules/bottom_nav/settings/viewModels/cubit/edit_cubit.dart';
-import 'package:social_app/modules/bottom_nav/settings/views/widgets/build_circle_image.dart';
-import 'package:social_app/modules/bottom_nav/settings/views/widgets/build_cover_image.dart';
+import 'package:social_app/modules/bottom_nav/settings/views/screens/edit_screen.dart';
+import 'package:social_app/modules/bottom_nav/settings/views/widgets/build_cover.dart';
 import 'package:social_app/modules/bottom_nav/settings/views/widgets/build_name_bio.dart';
+import 'package:social_app/modules/bottom_nav/settings/views/widgets/build_profile.dart';
 import 'package:social_app/modules/bottom_nav/settings/views/widgets/build_statistics.dart';
 import 'package:social_app/style/icon_broken.dart';
-import 'package:social_app/utils/navigations.dart';
-import 'package:social_app/utils/widgets/navigate_with_data.dart';
 
-import 'edit_screen.dart';
-
-class SettingsScreen extends StatelessWidget {
+class SettingsScreen extends StatefulWidget {
   const SettingsScreen({Key? key}) : super(key: key);
 
   @override
+  State<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends State<SettingsScreen> {
+  @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context)=> EditCubit(),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: SingleChildScrollView(
         child: Column(
           children: [
-            /// display user data
-            SizedBox(
-              height: 280,
-              width: double.infinity,
+            /// display Cover and Profile
+            Container(
+              height: 250,
+              color: Colors.white,
               child: Stack(
-                children: [
-                   BuildCoverImage(),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      SizedBox(
-                        height: 40,
-                      ),
-                      // TODO BuildCircleImage(),
-                      BuildNameBio(),
-                    ],
+                alignment: AlignmentDirectional.bottomCenter,
+                children: const [
+                  // Build Cover
+                  BuildCover(
+                    isEditing: false,
+                  ),
+                  BuildProfile(
+                    isEditing: false,
                   ),
                 ],
               ),
+            ),
+            const BuildNameBio(),
+            const SizedBox(
+              height: 20,
             ),
             /// display statistics
             Row(
@@ -97,18 +96,24 @@ class SettingsScreen extends StatelessWidget {
                 ),
                 OutlinedButton(
                   onPressed: () {
-                    navigateWithData(
-                      context: context,
-                      widget: const EditScreen(),
-                    );
+                    goToEditScreen(context);
                   },
                   child: const Icon(IconBroken.Edit),
                 ),
               ],
             ),
+            const SizedBox(
+              height: 20,
+            ),
           ],
         ),
       ),
     );
+  }
+
+  void goToEditScreen(BuildContext context) {
+    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
+      return const EditScreen();
+    }));
   }
 }

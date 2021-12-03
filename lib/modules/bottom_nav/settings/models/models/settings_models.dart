@@ -1,10 +1,19 @@
 class SettingsModels{
 
-  late String name;
-  late String urlImageCover ;
-  late String urlImageProfile;
-  late String bio;
+  late String? name;
+  late String? urlImageCover ;
+  late String? urlImageProfile;
+  late String? bio;
+  late String? phoneNumber;
 
+
+  SettingsModels({
+    this.name,
+    this.phoneNumber,
+    this.urlImageCover,
+    this.bio,
+    this.urlImageProfile,
+});
 
   SettingsModels.fromJson(Map<String, dynamic>? json){
     try {
@@ -12,6 +21,7 @@ class SettingsModels{
       urlImageCover = json['urlImageCover'];
       urlImageProfile = json['urlImageProfile'];
       bio = json['bio'];
+      phoneNumber = json['phoneNumber'];
     } on Exception catch (error) {
       print('Error when put data in [settingsModels] ${error.toString()}');
     }
@@ -21,8 +31,9 @@ class SettingsModels{
     return {
       'name': name,
       'urlImageCover' : urlImageCover,
-      'urlImageProfile' : urlImageCover,
+      'urlImageProfile' : urlImageProfile,
       'bio' : bio,
+      'phoneNumber' : phoneNumber,
     };
   }
 }

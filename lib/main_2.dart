@@ -4,10 +4,10 @@
 // import 'package:flutter_bloc/flutter_bloc.dart';
 // import 'package:hexcolor/hexcolor.dart';
 // import 'package:news_app/Layout/Cubit/States.dart';
-// import 'package:news_app/Layout/Cubit/cubit.dart';
+// import 'package:news_app/Layout/Cubit/edit_cubit.dart';
 // import 'package:news_app/Layout/News_Layout/News_Layout.dart';
 // import 'package:news_app/Moduls/jfhgh.dart';
-// import 'package:news_app/Shared/Cubit/cubit.dart';
+// import 'package:news_app/Shared/Cubit/edit_cubit.dart';
 // import 'package:news_app/Shared/Cubit/state.dart';
 // import 'package:news_app/Shared/remote/dio_helper.dart';
 //

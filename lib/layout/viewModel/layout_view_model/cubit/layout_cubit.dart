@@ -17,7 +17,7 @@ class LayoutCubit extends Cubit<LayoutState> {
     const ChatsScreen(),
     const SizedBox(),
     const UsersScreen(),
-    const SettingsScreen(),
+     SettingsScreen(),
   ];
 
   /*titles of Screens bottom navigation*/
