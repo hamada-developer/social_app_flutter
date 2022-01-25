@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
-import 'package:flutter/material.dart' show BuildContext, MaterialPageRoute, Navigator;
+import 'package:flutter/material.dart' show BuildContext, MaterialPageRoute, Navigator, TextEditingController;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:social_app/constants/app_strings.dart';
@@ -24,6 +24,12 @@ class SettingsCubit extends Cubit<SettingsStates> {
 
   late SettingsModels _settingsModels;
   late SettingsModels _oldSettingModels;
+
+  TextEditingController nameController = TextEditingController();
+  TextEditingController bioController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
+  bool isEnable = false;
+
 
   // *constructor
   SettingsCubit() : super(InitialSettingsStates());
@@ -75,6 +81,7 @@ class SettingsCubit extends Cubit<SettingsStates> {
         .then((value) {
       value.ref.getDownloadURL().then((value) {
         getDownloadURLCover = value;
+        emit(CoverImageUpdatingState(true));
       }).catchError((onError) {
         print(
             'Error: when getting download url cover image ${onError.tostring}');
@@ -96,6 +103,7 @@ class SettingsCubit extends Cubit<SettingsStates> {
     {
       value.ref.getDownloadURL().then((value) {
         getDownloadURLProfile = value;
+        emit(ProfileImageUpdatingState(true));
       });
     });
   }
@@ -142,5 +150,50 @@ class SettingsCubit extends Cubit<SettingsStates> {
 
   void navigateBack(BuildContext context){
     Navigator.pop(context);
+  }
+
+  void changeName() {
+    if (nameController.text != _oldSettingModels.name) {
+      emit(NameUpdatingState(nameController, true));
+    }
+    else if (nameController.text == _oldSettingModels.name &&
+        bioController.text != _oldSettingModels.bio ||
+        phoneController.text != _oldSettingModels.phoneNumber ||
+        getDownloadURLCover != null || getDownloadURLProfile !=null
+    ) {
+      emit(BioUpdatingState(bioController, true));
+    }
+    else {
+      isEnable = false;
+      emit(NameUpdatingState(nameController, false));
+    }
+  }
+
+  void changeBio() {
+    if (bioController.text != _oldSettingModels.bio) {
+      emit(BioUpdatingState(bioController, true));
+    } else if (bioController.text == _oldSettingModels.bio &&
+            nameController.text != _oldSettingModels.name ||
+        phoneController.text != _oldSettingModels.phoneNumber ||
+        getDownloadURLCover != null || getDownloadURLProfile !=null) {
+      emit(BioUpdatingState(bioController, true));
+    } else {
+      emit(BioUpdatingState(bioController, false));
+    }
+  }
+
+  void changePhone() {
+    if (phoneController.text != _oldSettingModels.phoneNumber) {
+      emit(PhoneUpdatingState(phoneController, true));
+    }
+    else if (phoneController.text == _oldSettingModels.phoneNumber &&
+        nameController.text != _oldSettingModels.name ||
+        bioController.text != _oldSettingModels.bio ||
+        getDownloadURLCover != null || getDownloadURLProfile !=null) {
+      emit(BioUpdatingState(bioController, true));
+    }
+    else {
+      emit(PhoneUpdatingState(phoneController, false));
+    }
   }
 }

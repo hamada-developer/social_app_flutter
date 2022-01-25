@@ -17,11 +17,11 @@ class EditScreen extends StatefulWidget {
 }
 
 class _EditScreenState extends State<EditScreen> {
-  TextEditingController nameController = TextEditingController();
-  TextEditingController bioController = TextEditingController();
-  TextEditingController phoneController = TextEditingController();
+
 
   SettingsModels? _settingsModels;
+
+  bool isEnable = false;
 
   @override
   Widget build(BuildContext context) {
@@ -32,27 +32,28 @@ class _EditScreenState extends State<EditScreen> {
         child: SingleChildScrollView(
           child: BlocBuilder<SettingsCubit, SettingsStates>(
             builder: (context, state) {
+              var cubit = SettingsCubit.get(context);
               if (state is GetDataSettingSuccessfulState) {
                 _settingsModels = state.settingsModels;
+                cubit.nameController.text = _settingsModels!.name!;
+                cubit.bioController.text = _settingsModels!.bio!;
+                cubit.phoneController.text = _settingsModels!.phoneNumber!;
               }
               else if (state is SuccessUpdateData) {
                 _settingsModels = state.settingsModels;
+                cubit.nameController.text = _settingsModels!.name!;
+                cubit.bioController.text = _settingsModels!.bio!;
+                cubit.phoneController.text = _settingsModels!.phoneNumber!;
               }
-              else if (state is SuccessUpdateData) {
-                _settingsModels = state.settingsModels;
+              else if(state is NameUpdatingState){
+                cubit.nameController = state.nameController;
               }
-
-              nameController.text = (_settingsModels != null
-                  ? _settingsModels!.name
-                  : 'waiting')!;
-
-              bioController.text = (_settingsModels != null
-                  ? _settingsModels!.bio
-                  : 'waiting')!;
-
-              phoneController.text = (_settingsModels != null
-                  ? _settingsModels!.phoneNumber
-                  : 'waiting')!;
+              else if(state is BioUpdatingState){
+                cubit.bioController = state.bioController;
+              }
+              else if(state is PhoneUpdatingState){
+                cubit.phoneController = state.phoneController;
+              }
               return Column(
                 children: [
                   /// display Cover and Profile
@@ -76,25 +77,34 @@ class _EditScreenState extends State<EditScreen> {
                     height: 20,
                   ),
                   DefaultTextFormField(
-                    controller: nameController,
+                    controller: cubit.nameController,
                     labelText: 'Name',
                     prefixIcon: const Icon(IconBroken.User),
+                    onChanged: (value){
+                      cubit.changeName();
+                    },
                   ),
                   const SizedBox(
                     height: 20,
                   ),
                   DefaultTextFormField(
-                    controller: bioController,
+                    controller: cubit.bioController,
                     labelText: 'Bio',
                     prefixIcon: const Icon(IconBroken.Info_Circle),
+                      onChanged: (value){
+                        cubit.changeBio();
+                      },
                   ),
                   const SizedBox(
                     height: 20,
                   ),
                   DefaultTextFormField(
-                    controller: phoneController,
+                    controller: cubit.phoneController,
                     labelText: 'Phone',
                     prefixIcon: const Icon(IconBroken.Call),
+                      onChanged: (value){
+                        cubit.changePhone();
+                      },
                   ),
                   const SizedBox(
                     height: 20,
@@ -115,15 +125,33 @@ class _EditScreenState extends State<EditScreen> {
             padding: const EdgeInsets.all(8.0),
             child: BlocBuilder<SettingsCubit, SettingsStates>(
               builder: (context, state) {
+                var cubit = SettingsCubit.get(context);
+                bool isEnabled = false;
+                if(state is NameUpdatingState){
+                  isEnabled = state.isEnabled;
+                }
+                if(state is BioUpdatingState){
+                  isEnabled = state.isEnabled;
+                }
+                if(state is PhoneUpdatingState){
+                  isEnabled = state.isEnabled;
+                }
+                if(state is CoverImageUpdatingState){
+                  isEnabled = state.isEnabled;
+                }
+                if(state is ProfileImageUpdatingState){
+                  isEnabled = state.isEnabled;
+                }
+                print('{}{}{}{----------> $isEnabled');
                 return TextButton(
-                  onPressed: () {
+                  onPressed: isEnabled? () {
                     SettingsCubit.get(context).updateData(
-                      bio: bioController.text,
-                      name: nameController.text,
-                      phone: phoneController.text,
+                      bio: cubit.bioController.text,
+                      name: cubit.nameController.text,
+                      phone: cubit.phoneController.text,
                       context: context,
                     );
-                  },
+                  }: null,
                   child: Text('update'.toUpperCase()),
                 );
               },

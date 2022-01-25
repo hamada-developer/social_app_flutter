@@ -9,6 +9,7 @@ import 'package:social_app/modules/auth/viewModels/login_screen_view_model/cubit
 import 'package:social_app/modules/auth/viewModels/register_screen_view_model/cubit/register_cubit.dart';
 import 'package:social_app/modules/auth/views/screens/login_screen.dart';
 import 'package:social_app/modules/auth/views/screens/register_screen.dart';
+import 'package:social_app/modules/bottom_nav/post/viewModel/cubit/add_post_cubit.dart';
 import 'package:social_app/modules/bottom_nav/post/views/screens/add_post.dart';
 
 class AppRouter {
@@ -46,7 +47,7 @@ class AppRouter {
         );
       case AppStrings.addPostScreen:
         return MaterialPageRoute(
-          builder: (BuildContext context) => const AddPostScreen(),
+          builder: (BuildContext context) =>  const AddPostScreen(),
         );
     }
   }
